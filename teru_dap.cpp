@@ -1,13 +1,29 @@
 #include "teru_dap.h"
 
+CommandReader::CommandReader() {
+    this->dap_info = DAP_INFO_VENDOR_ID;
+    this->connect_status = false;
+    this->running_status = false;
+}
+
 uint8_t CommandReader::read_command(const uint8_t * buffer) {
     uint8_t cid = buffer[0];
     switch(cid) {
         case DAP_CMD_INFO:
             this->dap_info = buffer[1];
             return TERU_ACT_INFO;
-        case DAP_CMD_HOST_STATUS:
+        case DAP_CMD_HOST_STATUS: {
+            uint8_t type = buffer[1];
+            uint8_t status = buffer[2];
+            if (type == DAP_HSTATUS_CONNECT) {
+                this->connect_status = status;
+            } else if (type == DAP_HSTATUS_RUNNING) {
+                this->running_status = status;
+            } else {
+                return TERU_ACT_INVALID;
+            }
             return TERU_ACT_HOST_STATUS;
+        }
         case DAP_CMD_CONNECT:
             return TERU_ACT_CONNECT;
         case DAP_CMD_DISCONNECT:
@@ -67,4 +83,12 @@ uint8_t CommandReader::read_command(const uint8_t * buffer) {
 
 uint8_t CommandReader::get_requested_dap_info_id() {
     return this->dap_info;
+}
+
+bool CommandReader::get_connect_status() {
+    return this->connect_status;
+}
+
+bool CommandReader::get_running_status() {
+    return this->running_status;
 }

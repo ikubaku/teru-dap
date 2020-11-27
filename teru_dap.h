@@ -107,6 +107,7 @@
 #define TERU_ACT_TRANSFER_ABORT 0x07
 #define TERU_ACT_EXECUTE_COMMANDS 0x7F
 #define TERU_ACT_QUEUE_COMMANDS 0x7E
+#define TERU_ACT_INVALID 0xFD
 #define TERU_ACT_NOP 0xFE
 #define TERU_ACT_UNDEFINED 0xFF
 
@@ -114,9 +115,14 @@
 class CommandReader {
 private:
     uint8_t dap_info;
+    bool connect_status;
+    bool running_status;
 public:
+    CommandReader();
     uint8_t read_command(const uint8_t *);
     uint8_t get_requested_dap_info_id();
+    bool get_connect_status();
+    bool get_running_status();
 };
 
 #endif //TERU_DAP_TERU_DAP_H
