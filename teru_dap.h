@@ -4,9 +4,6 @@
 #include <cstdint>
 #include "config.h"
 
-/* Previously requested DAP Info */
-static uint8_t dap_info;
-
 /* Maximum packet size */
 #ifdef USE_FS_HID
 #define DAP_PACKET_SIZE 64U
@@ -113,6 +110,13 @@ static uint8_t dap_info;
 #define TERU_ACT_NOP 0xFE
 #define TERU_ACT_UNDEFINED 0xFF
 
-uint8_t read_command(const uint8_t * buffer);
+
+class CommandReader {
+private:
+    uint8_t dap_info;
+public:
+    uint8_t read_command(const uint8_t *);
+    uint8_t get_requested_dap_info_id();
+};
 
 #endif //TERU_DAP_TERU_DAP_H

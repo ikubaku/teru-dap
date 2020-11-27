@@ -2,11 +2,11 @@
 
 #include <iostream>
 
-uint8_t read_command(const uint8_t * buffer) {
+uint8_t CommandReader::read_command(const uint8_t * buffer) {
     uint8_t cid = buffer[0];
     switch(cid) {
         case DAP_CMD_INFO:
-            dap_info = buffer[1];
+            this->dap_info = buffer[1];
             return TERU_ACT_INFO;
         case DAP_CMD_HOST_STATUS:
             return TERU_ACT_HOST_STATUS;
@@ -65,4 +65,8 @@ uint8_t read_command(const uint8_t * buffer) {
         default:
             return TERU_ACT_UNDEFINED;
     }
+}
+
+uint8_t CommandReader::get_requested_dap_info_id() {
+    return this->dap_info;
 }
