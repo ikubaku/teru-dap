@@ -1,7 +1,5 @@
 #include "teru_dap.h"
 
-#include <iostream>
-
 uint8_t CommandReader::read_command(const uint8_t * buffer) {
     uint8_t cid = buffer[0];
     switch(cid) {
