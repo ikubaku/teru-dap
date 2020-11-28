@@ -20,6 +20,14 @@
 #endif
 //#define DAP_PACKET_SIZE 512U
 
+/* Data sizes */
+#define SIZE_BYTE sizeof(uint8_t)
+#define SIZE_SHORT sizeof(uint16_t)
+#define SIZE_WORD sizeof(uint32_t)
+#define SIZE_LWORD sizeof(uint64_t)
+#define SIZE_FLOAT sizeof(uint32_t)
+#define TO_U8_LENGTH(s) ((s) / sizeof(uint8_t))
+
 /* DAP command IDs */
 #define DAP_CMD_INFO 0x00
 #define DAP_CMD_HOST_STATUS 0x01
@@ -144,7 +152,7 @@ private:
     bool running_status;
     PortMode dap_mode;
     uint8_t dap_index;
-    uint8_t reg_abort[4];
+    uint8_t reg_abort[TO_U8_LENGTH(SIZE_WORD)];
 
     Action read_cmd_info(const uint8_t *, size_t);
     Action read_cmd_host_status(const uint8_t *, size_t);

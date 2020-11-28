@@ -18,7 +18,7 @@ CommandReader::CommandReader() {
 }
 
 Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
-    if(len < 1) {
+    if(len < TO_U8_LENGTH(SIZE_BYTE)) {
         return Action::Invalid;
     }
 
@@ -86,7 +86,7 @@ Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
 }
 
 Action CommandReader::read_cmd_info(const uint8_t * buffer, size_t len) {
-    if(len != 2) {
+    if(len != TO_U8_LENGTH(SIZE_BYTE * 2)) {
         return Action::Invalid;
     }
 
@@ -95,7 +95,7 @@ Action CommandReader::read_cmd_info(const uint8_t * buffer, size_t len) {
 }
 
 Action CommandReader::read_cmd_host_status(const uint8_t * buffer, size_t len) {
-    if(len != 3) {
+    if(len != TO_U8_LENGTH(SIZE_BYTE * 3)) {
         return Action::Invalid;
     }
 
@@ -113,7 +113,7 @@ Action CommandReader::read_cmd_host_status(const uint8_t * buffer, size_t len) {
 }
 
 Action CommandReader::read_cmd_connect(const uint8_t * buffer, size_t len) {
-    if(len != 2) {
+    if(len != TO_U8_LENGTH(SIZE_BYTE * 2)) {
         return Action::Invalid;
     }
 
@@ -138,7 +138,7 @@ Action CommandReader::read_cmd_connect(const uint8_t * buffer, size_t len) {
 }
 
 Action CommandReader::read_cmd_write_abort(const uint8_t * buffer, size_t len) {
-    if(len != 6) {
+    if(len != TO_U8_LENGTH(SIZE_BYTE * 2 + SIZE_WORD)) {
         return Action::Invalid;
     }
 
