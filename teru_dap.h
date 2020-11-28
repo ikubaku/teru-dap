@@ -90,6 +90,7 @@ enum Action {
     SetRunningStatus,
     ConnectSWD,
     ConnectJTAG,
+    Disconnect,
     Invalid,
     NoOperation,
     Undefined,

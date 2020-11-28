@@ -21,7 +21,7 @@ Action CommandReader::read_command(const uint8_t * buffer) {
         case DAP_CMD_CONNECT:
             return this->read_cmd_connect(buffer);
         case DAP_CMD_DISCONNECT:
-            return Action::Undefined;
+            return Action::Disconnect;
         case DAP_CMD_WRITE_ABORT:
             return Action::Undefined;
         case DAP_CMD_DELAY:

@@ -55,3 +55,10 @@ TEST_F(CommandReaderTest, ReadDAP_CMD_CONNECT_1) {
     PortMode mode = reader.get_port_mode();
     ASSERT_EQ(mode, PortMode::JTAG);
 }
+
+TEST_F(CommandReaderTest, ReadDAP_CMD_DISCONNECT) {
+    uint8_t bytes[] = {0x03};
+
+    Action act = reader.read_command(bytes);
+    ASSERT_EQ(act, Action::Disconnect);
+}
