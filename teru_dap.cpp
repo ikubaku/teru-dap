@@ -17,19 +17,23 @@ CommandReader::CommandReader() {
     }
 }
 
-Action CommandReader::read_command(const uint8_t * buffer) {
+Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
+    if(len < 1) {
+        return Action::Invalid;
+    }
+
     uint8_t cid = buffer[0];
     switch(cid) {
         case DAP_CMD_INFO:
-            return this->read_cmd_info(buffer);
+            return this->read_cmd_info(buffer, len);
         case DAP_CMD_HOST_STATUS:
-            return this->read_cmd_host_status(buffer);
+            return this->read_cmd_host_status(buffer, len);
         case DAP_CMD_CONNECT:
-            return this->read_cmd_connect(buffer);
+            return this->read_cmd_connect(buffer, len);
         case DAP_CMD_DISCONNECT:
             return Action::Disconnect;
         case DAP_CMD_WRITE_ABORT:
-            return this->read_cmd_write_abort(buffer);
+            return this->read_cmd_write_abort(buffer, len);
         case DAP_CMD_DELAY:
             return Action::Undefined;
         case DAP_CMD_RESET_TARGET:
@@ -81,12 +85,20 @@ Action CommandReader::read_command(const uint8_t * buffer) {
     }
 }
 
-Action CommandReader::read_cmd_info(const uint8_t * buffer) {
+Action CommandReader::read_cmd_info(const uint8_t * buffer, size_t len) {
+    if(len != 2) {
+        return Action::Invalid;
+    }
+
     this->dap_info = buffer[1];
     return Action::SendInfo;
 }
 
-Action CommandReader::read_cmd_host_status(const uint8_t * buffer) {
+Action CommandReader::read_cmd_host_status(const uint8_t * buffer, size_t len) {
+    if(len != 3) {
+        return Action::Invalid;
+    }
+
     uint8_t type = buffer[1];
     uint8_t status = buffer[2];
     if (type == DAP_HSTATUS_CONNECT) {
@@ -100,7 +112,11 @@ Action CommandReader::read_cmd_host_status(const uint8_t * buffer) {
     }
 }
 
-Action CommandReader::read_cmd_connect(const uint8_t * buffer) {
+Action CommandReader::read_cmd_connect(const uint8_t * buffer, size_t len) {
+    if(len != 2) {
+        return Action::Invalid;
+    }
+
     uint8_t mode = buffer[1];
     if(mode == DAP_MODE_DEFAULT) {
 #if DAP_DEFAULT_PORT == 1
@@ -121,7 +137,11 @@ Action CommandReader::read_cmd_connect(const uint8_t * buffer) {
     }
 }
 
-Action CommandReader::read_cmd_write_abort(const uint8_t * buffer) {
+Action CommandReader::read_cmd_write_abort(const uint8_t * buffer, size_t len) {
+    if(len != 6) {
+        return Action::Invalid;
+    }
+
     uint8_t index = buffer[1];
     this->dap_index = index;
     for(size_t i=0; i<sizeof(this->reg_abort); i++) {

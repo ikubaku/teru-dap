@@ -2,6 +2,7 @@
 #define TERU_DAP_TERU_DAP_H
 
 #include <cstdint>
+#include <cstdlib>
 #include "config.h"
 
 /* Maximum packet size */
@@ -145,14 +146,14 @@ private:
     uint8_t dap_index;
     uint8_t reg_abort[4];
 
-    Action read_cmd_info(const uint8_t *);
-    Action read_cmd_host_status(const uint8_t *);
-    Action read_cmd_connect(const uint8_t *);
-    Action read_cmd_write_abort(const uint8_t *);
+    Action read_cmd_info(const uint8_t *, size_t);
+    Action read_cmd_host_status(const uint8_t *, size_t);
+    Action read_cmd_connect(const uint8_t *, size_t);
+    Action read_cmd_write_abort(const uint8_t *, size_t);
 
 public:
     CommandReader();
-    Action read_command(const uint8_t *);
+    Action read_command(const uint8_t *, size_t);
     uint8_t get_requested_dap_info_id();
     bool get_connect_status();
     bool get_running_status();
