@@ -4,6 +4,11 @@ CommandReader::CommandReader() {
     this->dap_info = DAP_INFO_VENDOR_ID;
     this->connect_status = false;
     this->running_status = false;
+#if DAP_DEFAULT_PORT == 1
+    this->dap_mode = PortMode::SWD;
+#elif DAP_DEFAULT_PORT == 2
+    this->dap_mode = PortMode::JTAG;
+#endif
 }
 
 Action CommandReader::read_command(const uint8_t * buffer) {
