@@ -10,21 +10,9 @@ Action CommandReader::read_command(const uint8_t * buffer) {
     uint8_t cid = buffer[0];
     switch(cid) {
         case DAP_CMD_INFO:
-            this->dap_info = buffer[1];
-            return Action::SendInfo;
-        case DAP_CMD_HOST_STATUS: {
-            uint8_t type = buffer[1];
-            uint8_t status = buffer[2];
-            if (type == DAP_HSTATUS_CONNECT) {
-                this->connect_status = status;
-                return Action::SetConnectStatus;
-            } else if (type == DAP_HSTATUS_RUNNING) {
-                this->running_status = status;
-                return Action::SetRunningStatus;
-            } else {
-                return Action::Invalid;
-            }
-        }
+            return this->read_cmd_info(buffer);
+        case DAP_CMD_HOST_STATUS:
+            return this->read_cmd_host_status(buffer);
         case DAP_CMD_CONNECT:
             return Action::SetConnectStatus;
         case DAP_CMD_DISCONNECT:
@@ -79,6 +67,25 @@ Action CommandReader::read_command(const uint8_t * buffer) {
             return Action::SetConnectStatus;
         default:
             return Action::SetConnectStatus;
+    }
+}
+
+Action CommandReader::read_cmd_info(const uint8_t * buffer) {
+    this->dap_info = buffer[1];
+    return Action::SendInfo;
+}
+
+Action CommandReader::read_cmd_host_status(const uint8_t * buffer) {
+    uint8_t type = buffer[1];
+    uint8_t status = buffer[2];
+    if (type == DAP_HSTATUS_CONNECT) {
+        this->connect_status = status;
+        return Action::SetConnectStatus;
+    } else if (type == DAP_HSTATUS_RUNNING) {
+        this->running_status = status;
+        return Action::SetRunningStatus;
+    } else {
+        return Action::Invalid;
     }
 }
 

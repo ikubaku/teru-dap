@@ -126,6 +126,10 @@ private:
     uint8_t dap_info;
     bool connect_status;
     bool running_status;
+
+    Action read_cmd_info(const uint8_t *);
+    Action read_cmd_host_status(const uint8_t *);
+
 public:
     CommandReader();
     Action read_command(const uint8_t *);
