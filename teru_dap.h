@@ -79,6 +79,15 @@
 #define DAP_DAP_ERROR 0xFF
 
 /* DAP actions */
+enum Action {
+    SendInfo,
+    SetConnectStatus,
+    SetRunningStatus,
+    Invalid,
+    NoOperation,
+    Undefined,
+};
+
 #define TERU_ACT_INFO 0x00
 #define TERU_ACT_HOST_STATUS 0x01
 #define TERU_ACT_CONNECT 0x02
@@ -119,7 +128,7 @@ private:
     bool running_status;
 public:
     CommandReader();
-    uint8_t read_command(const uint8_t *);
+    Action read_command(const uint8_t *);
     uint8_t get_requested_dap_info_id();
     bool get_connect_status();
     bool get_running_status();

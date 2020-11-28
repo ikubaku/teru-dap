@@ -6,78 +6,79 @@ CommandReader::CommandReader() {
     this->running_status = false;
 }
 
-uint8_t CommandReader::read_command(const uint8_t * buffer) {
+Action CommandReader::read_command(const uint8_t * buffer) {
     uint8_t cid = buffer[0];
     switch(cid) {
         case DAP_CMD_INFO:
             this->dap_info = buffer[1];
-            return TERU_ACT_INFO;
+            return Action::SendInfo;
         case DAP_CMD_HOST_STATUS: {
             uint8_t type = buffer[1];
             uint8_t status = buffer[2];
             if (type == DAP_HSTATUS_CONNECT) {
                 this->connect_status = status;
+                return Action::SetConnectStatus;
             } else if (type == DAP_HSTATUS_RUNNING) {
                 this->running_status = status;
+                return Action::SetRunningStatus;
             } else {
-                return TERU_ACT_INVALID;
+                return Action::Invalid;
             }
-            return TERU_ACT_HOST_STATUS;
         }
         case DAP_CMD_CONNECT:
-            return TERU_ACT_CONNECT;
+            return Action::SetConnectStatus;
         case DAP_CMD_DISCONNECT:
-            return TERU_ACT_DISCONNECT;
+            return Action::SetConnectStatus;
         case DAP_CMD_WRITE_ABORT:
-            return TERU_ACT_WRITE_ABORT;
+            return Action::SetConnectStatus;
         case DAP_CMD_DELAY:
-            return TERU_ACT_DELAY;
+            return Action::SetConnectStatus;
         case DAP_CMD_RESET_TARGET:
-            return TERU_ACT_RESET_TARGET;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWJ_PINS:
-            return TERU_ACT_SWJ_PINS;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWJ_CLOCK:
-            return TERU_ACT_SWJ_CLOCK;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWJ_SEQUENCE:
-            return TERU_ACT_SWJ_SEQUENCE;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWD_CONFIGURE:
-            return TERU_ACT_SWD_CONFIGURE;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWD_SEQUENCE:
-            return TERU_ACT_SWD_SEQUENCE;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWO_TRANSPORT:
-            return TERU_ACT_SWO_TRANSPORT;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWO_MODE:
-            return TERU_ACT_SWO_MODE;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWO_BAUDRATE:
-            return TERU_ACT_SWO_BAUDRATE;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWO_CONTROL:
-            return TERU_ACT_SWO_CONTROL;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWO_STATUS:
-            return TERU_ACT_SWO_STATUS;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWO_EXTENDED_STATUS:
-            return TERU_ACT_SWO_EXTENDED_STATUS;
+            return Action::SetConnectStatus;
         case DAP_CMD_SWO_DATA:
-            return TERU_ACT_SWO_DATA;
+            return Action::SetConnectStatus;
         case DAP_CMD_JTAG_SEQUENCE:
-            return TERU_ACT_JTAG_SEQUENCE;
+            return Action::SetConnectStatus;
         case DAP_CMD_JTAG_CONFIGURE:
-            return TERU_ACT_JTAG_CONFIGURE;
+            return Action::SetConnectStatus;
         case DAP_CMD_JTAG_IDCODE:
-            return TERU_ACT_JTAG_IDCODE;
+            return Action::SetConnectStatus;
         case DAP_CMD_TRANSFER_CONFIGURE:
-            return TERU_ACT_TRANSFER_CONFIGURE;
+            return Action::SetConnectStatus;
         case DAP_CMD_TRANSFER:
-            return TERU_ACT_TRANSFER;
+            return Action::SetConnectStatus;
         case DAP_CMD_TRANSFER_BLOCK:
-            return TERU_ACT_TRANSFER_BLOCK;
+            return Action::SetConnectStatus;
         case DAP_CMD_TRANSFER_ABORT:
-            return TERU_ACT_TRANSFER_ABORT;
+            return Action::SetConnectStatus;
         case DAP_CMD_EXECUTE_COMMANDS:
-            return TERU_ACT_EXECUTE_COMMANDS;
+            return Action::SetConnectStatus;
         case DAP_CMD_QUEUE_COMMANDS:
-            return TERU_ACT_QUEUE_COMMANDS;
+            return Action::SetConnectStatus;
         default:
-            return TERU_ACT_UNDEFINED;
+            return Action::SetConnectStatus;
     }
 }
 
