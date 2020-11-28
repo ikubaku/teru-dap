@@ -15,6 +15,7 @@ CommandReader::CommandReader() {
     for(size_t i=0; i<sizeof(this->reg_abort); i++) {
         ((volatile uint8_t *)this->reg_abort)[i] = 0x00;
     }
+    this->delay_us = 0;
 }
 
 Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
