@@ -14,59 +14,59 @@ Action CommandReader::read_command(const uint8_t * buffer) {
         case DAP_CMD_HOST_STATUS:
             return this->read_cmd_host_status(buffer);
         case DAP_CMD_CONNECT:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_DISCONNECT:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_WRITE_ABORT:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_DELAY:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_RESET_TARGET:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWJ_PINS:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWJ_CLOCK:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWJ_SEQUENCE:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWD_CONFIGURE:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWD_SEQUENCE:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWO_TRANSPORT:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWO_MODE:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWO_BAUDRATE:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWO_CONTROL:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWO_STATUS:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWO_EXTENDED_STATUS:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_SWO_DATA:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_JTAG_SEQUENCE:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_JTAG_CONFIGURE:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_JTAG_IDCODE:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_TRANSFER_CONFIGURE:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_TRANSFER:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_TRANSFER_BLOCK:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_TRANSFER_ABORT:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_EXECUTE_COMMANDS:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         case DAP_CMD_QUEUE_COMMANDS:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
         default:
-            return Action::SetConnectStatus;
+            return Action::Undefined;
     }
 }
 
