@@ -35,7 +35,7 @@ Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
         case DAP_CMD_WRITE_ABORT:
             return this->read_cmd_write_abort(buffer, len);
         case DAP_CMD_DELAY:
-            return Action::Undefined;
+            return this->read_cmd_delay(buffer, len);
         case DAP_CMD_RESET_TARGET:
             return Action::Undefined;
         case DAP_CMD_SWJ_PINS:
@@ -150,6 +150,15 @@ Action CommandReader::read_cmd_write_abort(const uint8_t * buffer, size_t len) {
     return Action::WriteABORT;
 }
 
+Action CommandReader::read_cmd_delay(const uint8_t * buffer, size_t len) {
+    if(len != TO_U8_LENGTH(SIZE_BYTE + SIZE_SHORT)) {
+        return Action::Invalid;
+    }
+
+    this->delay_us = buffer[2] * 0x100 + buffer[1];
+    return Action::Delay;
+}
+
 uint8_t CommandReader::get_requested_dap_info_id() {
     return this->dap_info;
 }
@@ -172,4 +181,8 @@ uint8_t CommandReader::get_dap_index() {
 
 const uint8_t * CommandReader::get_reg_abort() {
     return (const uint8_t *)this->reg_abort;
+}
+
+uint16_t CommandReader::get_delay_us() {
+    return this->delay_us;
 }
