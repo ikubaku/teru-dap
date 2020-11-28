@@ -102,6 +102,7 @@ enum Action {
     Disconnect,
     WriteABORT,
     Delay,
+    ResetTarget,
     Invalid,
     NoOperation,
     Undefined,

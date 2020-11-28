@@ -37,7 +37,7 @@ Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
         case DAP_CMD_DELAY:
             return this->read_cmd_delay(buffer, len);
         case DAP_CMD_RESET_TARGET:
-            return Action::Undefined;
+            return Action::ResetTarget;
         case DAP_CMD_SWJ_PINS:
             return Action::Undefined;
         case DAP_CMD_SWJ_CLOCK:

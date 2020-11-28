@@ -88,3 +88,10 @@ TEST_F(CommandReaderTest, ReadDAP_CMD_DELAY) {
     uint16_t delay_us = reader.get_delay_us();
     ASSERT_EQ(delay_us, 1000);
 }
+
+TEST_F(CommandReaderTest, ReadDAP_CMD_RESET_TARGET) {
+    uint8_t bytes[] = {0x0A};
+
+    Action act = reader.read_command(bytes, sizeof(bytes));
+    ASSERT_EQ(act, Action::ResetTarget);
+}
