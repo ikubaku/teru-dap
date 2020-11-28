@@ -91,6 +91,7 @@ enum Action {
     ConnectSWD,
     ConnectJTAG,
     Disconnect,
+    WriteABORT,
     Invalid,
     NoOperation,
     Undefined,
@@ -141,10 +142,13 @@ private:
     bool connect_status;
     bool running_status;
     PortMode dap_mode;
+    uint8_t dap_index;
+    uint8_t reg_abort[4];
 
     Action read_cmd_info(const uint8_t *);
     Action read_cmd_host_status(const uint8_t *);
     Action read_cmd_connect(const uint8_t *);
+    Action read_cmd_write_abort(const uint8_t *);
 
 public:
     CommandReader();
@@ -153,6 +157,8 @@ public:
     bool get_connect_status();
     bool get_running_status();
     PortMode get_port_mode();
+    uint8_t get_dap_index();
+    const uint8_t * get_reg_abort();
 };
 
 #endif //TERU_DAP_TERU_DAP_H

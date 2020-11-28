@@ -1,5 +1,7 @@
 #include "teru_dap.h"
 
+#include <cstdlib>
+
 CommandReader::CommandReader() {
     this->dap_info = DAP_INFO_VENDOR_ID;
     this->connect_status = false;
@@ -9,6 +11,10 @@ CommandReader::CommandReader() {
 #elif DAP_DEFAULT_PORT == 2
     this->dap_mode = PortMode::JTAG;
 #endif
+    this->dap_index = 0;
+    for(size_t i=0; i<sizeof(this->reg_abort); i++) {
+        ((volatile uint8_t *)this->reg_abort)[i] = 0x00;
+    }
 }
 
 Action CommandReader::read_command(const uint8_t * buffer) {
@@ -23,7 +29,7 @@ Action CommandReader::read_command(const uint8_t * buffer) {
         case DAP_CMD_DISCONNECT:
             return Action::Disconnect;
         case DAP_CMD_WRITE_ABORT:
-            return Action::Undefined;
+            return this->read_cmd_write_abort(buffer);
         case DAP_CMD_DELAY:
             return Action::Undefined;
         case DAP_CMD_RESET_TARGET:
@@ -115,6 +121,15 @@ Action CommandReader::read_cmd_connect(const uint8_t * buffer) {
     }
 }
 
+Action CommandReader::read_cmd_write_abort(const uint8_t * buffer) {
+    uint8_t index = buffer[1];
+    this->dap_index = index;
+    for(size_t i=0; i<sizeof(this->reg_abort); i++) {
+        this->reg_abort[i] = buffer[2+i];
+    }
+    return Action::WriteABORT;
+}
+
 uint8_t CommandReader::get_requested_dap_info_id() {
     return this->dap_info;
 }
@@ -129,4 +144,12 @@ bool CommandReader::get_running_status() {
 
 PortMode CommandReader::get_port_mode() {
     return this->dap_mode;
+}
+
+uint8_t CommandReader::get_dap_index() {
+    return this->dap_index;
+}
+
+const uint8_t * CommandReader::get_reg_abort() {
+    return (const uint8_t *)this->reg_abort;
 }

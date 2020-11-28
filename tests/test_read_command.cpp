@@ -62,3 +62,19 @@ TEST_F(CommandReaderTest, ReadDAP_CMD_DISCONNECT) {
     Action act = reader.read_command(bytes);
     ASSERT_EQ(act, Action::Disconnect);
 }
+
+TEST_F(CommandReaderTest, ReadDAP_CMD_WRITE_ABORT) {
+    uint8_t bytes[] = {0x08, 0x01, 0x10, 0x32, 0x54, 0x76};
+
+    Action act = reader.read_command(bytes);
+    ASSERT_EQ(act, Action::WriteABORT);
+
+    uint8_t index = reader.get_dap_index();
+    ASSERT_EQ(index, 0x01);
+
+    const uint8_t * reg_abort = reader.get_reg_abort();
+    ASSERT_EQ(reg_abort[0], 0x10);
+    ASSERT_EQ(reg_abort[1], 0x32);
+    ASSERT_EQ(reg_abort[2], 0x54);
+    ASSERT_EQ(reg_abort[3], 0x76);
+}
