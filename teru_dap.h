@@ -74,6 +74,11 @@
 #define DAP_HSTATUS_CONNECT 0x00
 #define DAP_HSTATUS_RUNNING 0x01
 
+/* DAP port modes */
+#define DAP_MODE_DEFAULT 0x00
+#define DAP_MODE_SWD 0x01
+#define DAP_MODE_JTAG 0x02
+
 /* Response status */
 #define DAP_DAP_OK 0x00
 #define DAP_DAP_ERROR 0xFF
@@ -83,9 +88,17 @@ enum Action {
     SendInfo,
     SetConnectStatus,
     SetRunningStatus,
+    ConnectSWD,
+    ConnectJTAG,
     Invalid,
     NoOperation,
     Undefined,
+};
+
+/* DAP port modes(for the state) */
+enum PortMode {
+    SWD,
+    JTAG,
 };
 
 #define TERU_ACT_INFO 0x00
@@ -126,9 +139,11 @@ private:
     uint8_t dap_info;
     bool connect_status;
     bool running_status;
+    PortMode dap_mode;
 
     Action read_cmd_info(const uint8_t *);
     Action read_cmd_host_status(const uint8_t *);
+    Action read_cmd_connect(const uint8_t *);
 
 public:
     CommandReader();
@@ -136,6 +151,7 @@ public:
     uint8_t get_requested_dap_info_id();
     bool get_connect_status();
     bool get_running_status();
+    PortMode get_port_mode();
 };
 
 #endif //TERU_DAP_TERU_DAP_H

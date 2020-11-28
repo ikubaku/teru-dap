@@ -14,7 +14,7 @@ Action CommandReader::read_command(const uint8_t * buffer) {
         case DAP_CMD_HOST_STATUS:
             return this->read_cmd_host_status(buffer);
         case DAP_CMD_CONNECT:
-            return Action::Undefined;
+            return this->read_cmd_connect(buffer);
         case DAP_CMD_DISCONNECT:
             return Action::Undefined;
         case DAP_CMD_WRITE_ABORT:
@@ -89,6 +89,29 @@ Action CommandReader::read_cmd_host_status(const uint8_t * buffer) {
     }
 }
 
+Action CommandReader::read_cmd_connect(const uint8_t * buffer) {
+    uint8_t mode = buffer[1];
+    if(mode == DAP_MODE_DEFAULT) {
+#if DAP_DEFAULT_PORT == 1
+        this->dap_mode = PortMode::SWD;
+        return Action::ConnectSWD;
+#elif DAP_DEFAULT_PORT == 2
+        this->dap_mode = PortMode::JTAG;
+        return Action::ConnectJTAG;
+#else
+#error "Invalid DAP_DEFAULT_PORT value."
+#endif
+    } else if(mode == DAP_MODE_SWD) {
+        this->dap_mode = PortMode::SWD;
+        return Action::ConnectSWD;
+    } else if(mode == DAP_MODE_JTAG) {
+        this->dap_mode = PortMode::JTAG;
+        return Action::ConnectJTAG;
+    } else {
+        return Action::Invalid;
+    }
+}
+
 uint8_t CommandReader::get_requested_dap_info_id() {
     return this->dap_info;
 }
@@ -99,4 +122,8 @@ bool CommandReader::get_connect_status() {
 
 bool CommandReader::get_running_status() {
     return this->running_status;
+}
+
+PortMode CommandReader::get_port_mode() {
+    return this->dap_mode;
 }
