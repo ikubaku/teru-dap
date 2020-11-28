@@ -23,3 +23,7 @@
 #if defined(USE_HS_WINUSB) && (defined(USB_FS_HID) || defined(USE_FS_WINUSB) || defined(USE_HS_HID))
 #error "Multiple USB peripherals are specified."
 #endif
+
+#if (DAP_DEFAULT_PORT != 1) && (DAP_DEFAULT_PORT != 2)
+#error "Invalid DAP_DEFAULT_PORT value."
+#endif

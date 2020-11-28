@@ -103,8 +103,6 @@ Action CommandReader::read_cmd_connect(const uint8_t * buffer) {
 #elif DAP_DEFAULT_PORT == 2
         this->dap_mode = PortMode::JTAG;
         return Action::ConnectJTAG;
-#else
-#error "Invalid DAP_DEFAULT_PORT value."
 #endif
     } else if(mode == DAP_MODE_SWD) {
         this->dap_mode = PortMode::SWD;
