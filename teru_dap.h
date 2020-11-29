@@ -103,6 +103,7 @@ enum Action {
     WriteABORT,
     Delay,
     ResetTarget,
+    SWJPins,
     Invalid,
     NoOperation,
     Undefined,
@@ -156,12 +157,16 @@ private:
     uint8_t dap_index;
     uint8_t reg_abort[TO_U8_LENGTH(SIZE_WORD)];
     uint16_t delay_us;
+    uint8_t swj_pins;
+    uint8_t swj_select;
+    uint32_t swj_pin_wait;
 
     Action read_cmd_info(const uint8_t *, size_t);
     Action read_cmd_host_status(const uint8_t *, size_t);
     Action read_cmd_connect(const uint8_t *, size_t);
     Action read_cmd_write_abort(const uint8_t *, size_t);
     Action read_cmd_delay(const uint8_t *, size_t);
+    Action read_cmd_swj_pins(const uint8_t *, size_t);
 
 public:
     CommandReader();
@@ -173,6 +178,9 @@ public:
     uint8_t get_dap_index();
     const uint8_t * get_reg_abort();
     uint16_t get_delay_us();
+    uint8_t get_swj_pin_output();
+    uint8_t get_swj_pin_select();
+    uint32_t get_swj_pin_wait();
 };
 
 #endif //TERU_DAP_TERU_DAP_H

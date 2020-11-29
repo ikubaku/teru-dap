@@ -95,3 +95,19 @@ TEST_F(CommandReaderTest, ReadDAP_CMD_RESET_TARGET) {
     Action act = reader.read_command(bytes, sizeof(bytes));
     ASSERT_EQ(act, Action::ResetTarget);
 }
+
+TEST_F(CommandReaderTest, ReadDAP_CMD_SWJ_PINS) {
+    uint8_t bytes[] = {0x10, 0b10101010, 0b11110000, 0xC0, 0xC6, 0x2D, 0x00};    // wait=3s
+
+    Action act = reader.read_command(bytes, sizeof(bytes));
+    ASSERT_EQ(act, Action::SWJPins);
+
+    uint8_t pin_output = reader.get_swj_pin_output();
+    ASSERT_EQ(pin_output, 0b10101010);
+
+    uint8_t pin_select = reader.get_swj_pin_select();
+    ASSERT_EQ(pin_select, 0b11110000);
+
+    uint32_t pin_wait = reader.get_swj_pin_wait();
+    ASSERT_EQ(pin_wait, 3000000);
+}

@@ -16,6 +16,9 @@ CommandReader::CommandReader() {
         ((volatile uint8_t *)this->reg_abort)[i] = 0x00;
     }
     this->delay_us = 0;
+    this->swj_pins = 0b00000000;
+    this->swj_select = 0b00000000;
+    this->swj_pin_wait = 0x00000000;
 }
 
 Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
@@ -40,7 +43,7 @@ Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
         case DAP_CMD_RESET_TARGET:
             return Action::ResetTarget;
         case DAP_CMD_SWJ_PINS:
-            return Action::Undefined;
+            return this->read_cmd_swj_pins(buffer, len);
         case DAP_CMD_SWJ_CLOCK:
             return Action::Undefined;
         case DAP_CMD_SWJ_SEQUENCE:
@@ -160,6 +163,22 @@ Action CommandReader::read_cmd_delay(const uint8_t * buffer, size_t len) {
     return Action::Delay;
 }
 
+Action CommandReader::read_cmd_swj_pins(const uint8_t * buffer, size_t len) {
+    if(len != TO_U8_LENGTH(SIZE_BYTE * 3 + SIZE_WORD)) {
+        return Action::Invalid;
+    }
+
+    uint32_t pin_wait_tmp = buffer[6] * 0x1000000 + buffer[5] * 0x10000 + buffer[4] * 0x100 + buffer[3];
+    if(pin_wait_tmp > 3000000) {
+        return Action::Invalid;
+    }
+
+    this->swj_pins = buffer[1];
+    this->swj_select = buffer[2];
+    this->swj_pin_wait = pin_wait_tmp;
+    return Action::SWJPins;
+}
+
 uint8_t CommandReader::get_requested_dap_info_id() {
     return this->dap_info;
 }
@@ -186,4 +205,16 @@ const uint8_t * CommandReader::get_reg_abort() {
 
 uint16_t CommandReader::get_delay_us() {
     return this->delay_us;
+}
+
+uint8_t CommandReader::get_swj_pin_output() {
+    return this->swj_pins;
+}
+
+uint8_t CommandReader::get_swj_pin_select() {
+    return this->swj_select;
+}
+
+uint32_t CommandReader::get_swj_pin_wait() {
+    return this->swj_pin_wait;
 }
