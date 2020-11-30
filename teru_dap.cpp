@@ -266,5 +266,5 @@ uint8_t CommandReader::get_swj_sequence_len() {
 }
 
 const uint8_t * CommandReader::get_swj_sequence() {
-    return this->swj_sequence;
+    return (const uint8_t *)this->swj_sequence;
 }
