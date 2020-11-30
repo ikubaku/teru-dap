@@ -45,7 +45,7 @@ Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
         case DAP_CMD_SWJ_PINS:
             return this->read_cmd_swj_pins(buffer, len);
         case DAP_CMD_SWJ_CLOCK:
-            return Action::Undefined;
+            return this->read_cmd_swj_clock(buffer, len);
         case DAP_CMD_SWJ_SEQUENCE:
             return Action::Undefined;
         case DAP_CMD_SWD_CONFIGURE:
@@ -179,6 +179,15 @@ Action CommandReader::read_cmd_swj_pins(const uint8_t * buffer, size_t len) {
     return Action::SWJPins;
 }
 
+Action CommandReader::read_cmd_swj_clock(const uint8_t * buffer, size_t len) {
+    if(len != TO_U8_LENGTH(SIZE_BYTE + SIZE_WORD)) {
+        return Action::Invalid;
+    }
+
+    this->swj_clock_hz = buffer[4] * 0x1000000 + buffer[3] * 0x10000 + buffer[2] * 0x100 + buffer[1];
+    return Action::SWJClock;
+}
+
 uint8_t CommandReader::get_requested_dap_info_id() {
     return this->dap_info;
 }
@@ -217,4 +226,8 @@ uint8_t CommandReader::get_swj_pin_select() {
 
 uint32_t CommandReader::get_swj_pin_wait() {
     return this->swj_pin_wait;
+}
+
+uint32_t CommandReader::get_swj_clock() {
+    return this->swj_clock_hz;
 }

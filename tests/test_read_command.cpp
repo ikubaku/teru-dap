@@ -111,3 +111,13 @@ TEST_F(CommandReaderTest, ReadDAP_CMD_SWJ_PINS) {
     uint32_t pin_wait = reader.get_swj_pin_wait();
     ASSERT_EQ(pin_wait, 3000000);
 }
+
+TEST_F(CommandReaderTest, ReadDAP_CMD_SWJ_CLOCK) {
+    uint8_t bytes[] = {0x11, 0x80, 0x1A, 0x06, 0x00};    // 400kHz
+
+    Action act = reader.read_command(bytes, sizeof(bytes));
+    ASSERT_EQ(act, Action::SWJClock);
+
+    uint32_t swj_clock = reader.get_swj_clock();
+    ASSERT_EQ(swj_clock, 400000);
+}
