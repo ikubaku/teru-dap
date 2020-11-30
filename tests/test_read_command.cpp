@@ -121,3 +121,18 @@ TEST_F(CommandReaderTest, ReadDAP_CMD_SWJ_CLOCK) {
     uint32_t swj_clock = reader.get_swj_clock();
     ASSERT_EQ(swj_clock, 400000);
 }
+
+TEST_F(CommandReaderTest, ReadDAP_CMD_SWJ_SEQUENCE) {
+    uint8_t bytes[] = {0x12, 0x88, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x9E, 0xE7, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00};    // JTAG to SWD sequence
+
+    Action act = reader.read_command(bytes, sizeof(bytes));
+    ASSERT_EQ(act, Action::SWJSequence);
+
+    uint8_t seq_len = reader.get_swj_sequence_len();
+    ASSERT_EQ(seq_len, 136);
+
+    const uint8_t * seq = reader.get_swj_sequence();
+    for(size_t i=0; i<17; i++) {
+        ASSERT_EQ(seq[i], bytes[2+i]);
+    }
+}

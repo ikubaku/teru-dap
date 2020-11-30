@@ -1,6 +1,7 @@
 #include "teru_dap.h"
 
 #include <cstdlib>
+#include <cstring>
 
 CommandReader::CommandReader() {
     this->dap_info = DAP_INFO_VENDOR_ID;
@@ -20,6 +21,10 @@ CommandReader::CommandReader() {
     this->swj_select = 0b00000000;
     this->swj_pin_wait = 0;
     this->swj_clock_hz = 0;
+    this->swj_sequence_len = 0;
+    for(size_t i=0; i<sizeof(this->swj_sequence); i++) {
+        ((volatile uint8_t *)this->swj_sequence)[i] = 0x00;
+    }
 }
 
 Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
@@ -48,7 +53,7 @@ Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
         case DAP_CMD_SWJ_CLOCK:
             return this->read_cmd_swj_clock(buffer, len);
         case DAP_CMD_SWJ_SEQUENCE:
-            return Action::Undefined;
+            return this->read_cmd_swj_sequence(buffer, len);
         case DAP_CMD_SWD_CONFIGURE:
             return Action::Undefined;
         case DAP_CMD_SWD_SEQUENCE:
@@ -189,6 +194,29 @@ Action CommandReader::read_cmd_swj_clock(const uint8_t * buffer, size_t len) {
     return Action::SWJClock;
 }
 
+Action CommandReader::read_cmd_swj_sequence(const uint8_t * buffer, size_t len) {
+    if(len < TO_U8_LENGTH(SIZE_BYTE * 3)) {
+        return Action::Invalid;
+    }
+
+    /* Compute the copy region length */
+    uint8_t seq_len_tmp = buffer[1];
+    size_t seq_byte_len;
+    if(seq_len_tmp == 0) {
+        seq_byte_len = 32;
+    } else {
+        /* seq_byte_len = ceil(seq_len_tmp / 8); */
+        seq_byte_len = (seq_len_tmp / 8) + ((seq_len_tmp % 8) ? 1 : 0);
+    }
+    if(len != TO_U8_LENGTH(SIZE_BYTE * 2) + seq_byte_len) {
+        return Action::Invalid;
+    }
+
+    this->swj_sequence_len = seq_len_tmp;
+    memcpy(this->swj_sequence, buffer + 2, seq_byte_len);
+    return Action::SWJSequence;
+}
+
 uint8_t CommandReader::get_requested_dap_info_id() {
     return this->dap_info;
 }
@@ -231,4 +259,12 @@ uint32_t CommandReader::get_swj_pin_wait() {
 
 uint32_t CommandReader::get_swj_clock() {
     return this->swj_clock_hz;
+}
+
+uint8_t CommandReader::get_swj_sequence_len() {
+    return this->swj_sequence_len;
+}
+
+const uint8_t * CommandReader::get_swj_sequence() {
+    return this->swj_sequence;
 }

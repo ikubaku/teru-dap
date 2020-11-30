@@ -105,6 +105,7 @@ enum Action {
     ResetTarget,
     SWJPins,
     SWJClock,
+    SWJSequence,
     Invalid,
     NoOperation,
     Undefined,
@@ -162,6 +163,8 @@ private:
     uint8_t swj_select;
     uint32_t swj_pin_wait;
     uint32_t swj_clock_hz;
+    uint8_t swj_sequence_len;
+    uint8_t swj_sequence[32];
 
     Action read_cmd_info(const uint8_t *, size_t);
     Action read_cmd_host_status(const uint8_t *, size_t);
@@ -170,6 +173,7 @@ private:
     Action read_cmd_delay(const uint8_t *, size_t);
     Action read_cmd_swj_pins(const uint8_t *, size_t);
     Action read_cmd_swj_clock(const uint8_t *, size_t);
+    Action read_cmd_swj_sequence(const uint8_t *, size_t);
 
 public:
     CommandReader();
@@ -185,6 +189,8 @@ public:
     uint8_t get_swj_pin_select();
     uint32_t get_swj_pin_wait();
     uint32_t get_swj_clock();
+    const uint8_t * get_swj_sequence();
+    uint8_t get_swj_sequence_len();
 };
 
 #endif //TERU_DAP_TERU_DAP_H
