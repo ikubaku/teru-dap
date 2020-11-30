@@ -18,7 +18,8 @@ CommandReader::CommandReader() {
     this->delay_us = 0;
     this->swj_pins = 0b00000000;
     this->swj_select = 0b00000000;
-    this->swj_pin_wait = 0x00000000;
+    this->swj_pin_wait = 0;
+    this->swj_clock_hz = 0;
 }
 
 Action CommandReader::read_command(const uint8_t * buffer, size_t len) {
